@@ -1,6 +1,7 @@
 class Word {
     String question, japanese, word, meaning;
     String mainword, answerword;
+    int idnum;
     static final String judgestring[] = { "correct!", "it's wrong." };
 
     public boolean equals(Object obj) {
@@ -24,7 +25,7 @@ class Word {
     }
 
     public String showAnswer() {
-        StringBuffer ans = new StringBuffer(mainword + "\n");
+        StringBuffer ans = new StringBuffer("No." + String.valueOf(idnum) + " " +  mainword + "\n");
         if (!mainword.equals(answerword))
             ans.append("(" + answerword + ")\n");
         ans.append(meaning);
@@ -32,7 +33,7 @@ class Word {
     }
 
     public String showWord() {
-        StringBuffer ans = new StringBuffer(mainword + "\n");
+        StringBuffer ans = new StringBuffer("No." + String.valueOf(idnum) + " " +  mainword + "\n");
         ans.append(meaning + "\n");
         return ans.toString();
     }
@@ -43,6 +44,7 @@ class Word {
         japanese = word.japanese.substring(0);
         mainword = word.mainword.substring(0);
         meaning = word.meaning.substring(0);
+        idnum = word.idnum;
         if (word.word != null)
             this.word = word.word.substring(0);
     }

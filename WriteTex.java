@@ -1,6 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+// import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.InputStream;
@@ -12,18 +12,15 @@ import java.util.Map;
 
 class WriteTex {
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
-    private static Tango data;
-    private static String execTexstring[][] = { { "platex", ".tex" }, { "dvipdfmx", ".dvi" }, { "rm", ".aux" },
-            { "rm", ".log" }, { "rm", ".dvi" }, { "rm", ".tex" }, { "mv", ".pdf" } };
-    // private static String execTexstring[][] = { { "platex", ".tex" },
-    // {"dvipdfmx", ".dvi" }, { "rm", ".aux" },{ "rm", ".log" }, { "rm", ".dvi" }, {
-    // "mv", ".pdf" } };
-    static final String pdfname = "金のフレーズ730単語間違えたリスト.pdf";
+    private static final String execTexstring[][] = { { "platex", ".tex" }, { "dvipdfmx", ".dvi" }, { "rm", ".aux" },
+            { "rm", ".log" }, { "rm", ".dvi" }, { "rm", ".tex" }, { "mv", ".pdf" }, { "rm", ".sh" } };
     static final String origin = "tango";
     static final int iswindows = 0;
     static final int islinux = 1;
     static final int ismac = 2;
     static final int other = -1;
+    private static Tango data;
+    static String pdfname = "金のフレーズ730単語間違えたリスト.pdf";
     static int OSname = other;
 
     public static String replaceString(String target, String from, String to) {
@@ -44,26 +41,28 @@ class WriteTex {
     }
 
     public static int getOSname() {
+        if (OSname != other)
+            return OSname;
         if (isLinux())
-            return islinux;
+            return OSname = islinux;
         if (isWindows())
-            return iswindows;
+            return OSname = iswindows;
         if (isMac())
-            return ismac;
+            return OSname = ismac;
         return other;
     }
 
     public static int exec(String[] command) {
         Process process = null;
-        System.out.println("statrt");
+        int exitcode = -1;
+        System.out.println("start");
         try {
             Runtime rm = Runtime.getRuntime();
             process = rm.exec(command);
-            int exitcode = process.waitFor();
+            exitcode = process.waitFor();
             InputStream is = process.getInputStream(); // プロセスの結果を変数に格納する
             BufferedReader br = new BufferedReader(new InputStreamReader(is)); // テキスト読み込みを行えるようにする
-
-            System.out.println("statrt2");
+            System.out.println("start2");
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
@@ -74,18 +73,18 @@ class WriteTex {
             }
             br.close();
             is.close();
-            System.out.println("statrt3");
-            return exitcode;
+            System.out.println("sucess!");
         } catch (IOException io) {
             io.printStackTrace();
-            return -1;
+            exitcode = -1;
         } catch (InterruptedException it) {
             it.printStackTrace();
-            return -1;
+            exitcode = -1;
         } finally {
             if (process != null && process.isAlive())
-                process.destroy();
+            process.destroy();
         }
+        return exitcode;
     }
 
     public static void iniTex() {
@@ -98,12 +97,20 @@ class WriteTex {
                 int len = execTexstring.length;
                 for (int i = 0; i < len; ++i) {
                     String command = execTexstring[i][0];
+                    String suffix = execTexstring[i][1];
                     switch (command) {
                         case "rm":
                             execTexstring[i][0] = "del";
                             break;
                         case "mv":
                             execTexstring[i][0] = "move /y";
+                            break;
+                        default:
+                            break;
+                    }
+                    switch (suffix) {
+                        case ".sh":
+                            execTexstring[i][1] = ".bat";
                             break;
                         default:
                             break;
@@ -115,63 +122,60 @@ class WriteTex {
         }
     }
 
+    public static void createexecFile(PrintWriter pw) {
+        int len = execTexstring.length;
+        for (int i = 0; i < len; ++i) {
+            String cmd = execTexstring[i][0];
+            String suffix = execTexstring[i][1];
+            pw.print(cmd + " " + origin + suffix);
+            if (!suffix.equals(".pdf"))
+                pw.println();
+            else
+                pw.println(" " + pdfname);
+        }
+    }
+
     public static int execBat() {
+        int exitcode = -1;
         PrintWriter execw = null;
         try {
             execw = new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(origin + ".bat"), "Shift-JIS")));
-            int len = execTexstring.length;
-            for (int i = 0; i < len; ++i) {
-                String cmd = execTexstring[i][0];
-                String suffix = execTexstring[i][1];
-                execw.print(cmd + " " + origin + suffix);
-                if (!suffix.equals(".pdf"))
-                    execw.print(" && ");
-                else
-                    execw.print(" " + pdfname);
-            }
-            execw.print(" && del " + origin + ".bat");
+            execw.println("@echo off");
+            execw.println("cd /d %~dp0");
+            createexecFile(execw);
             execw.close();
-            int exitcode = exec(new String[] { origin + ".bat" });
-            return exitcode;
+            exitcode = exec(new String[] { origin + ".bat" });
         } catch (IOException e) {
             e.printStackTrace();
-            return -1;
+            exitcode = -1;
         } finally {
             if (execw != null) {
                 execw.close();
             }
         }
+        return exitcode;
     }
 
     public static int execBash() {
         PrintWriter execw = null;
+        int exitcode = -1;
         try {
             execw = new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(origin + ".sh"), "UTF-8")));
-            int len = execTexstring.length;
             execw.println("#!/bin/bash");
-            for (int i = 0; i < len; ++i) {
-                String cmd = execTexstring[i][0];
-                String suffix = execTexstring[i][1];
-                execw.println(cmd + " " + origin + suffix);
-                if (!suffix.equals(".pdf"))
-                    execw.println();
-                else
-                    execw.println(" " + pdfname);
-            }
-            execw.println("rm " + origin + ".sh");
+            createexecFile(execw);
             execw.close();
-            int exitcode = exec(new String[] { "bash", origin + ".sh" });
-            return exitcode;
+            exitcode = exec(new String[] { "bash", origin + ".sh" });
         } catch (IOException e) {
             e.printStackTrace();
-            return -1;
+            exitcode = -1;
         } finally {
             if (execw != null) {
                 execw.close();
             }
         }
+        return exitcode;
     }
 
     public static int execDirectly() {
@@ -212,12 +216,13 @@ class WriteTex {
         return -1;
     }
 
-    public static void createTex(List<Map<Double, List<Word>>> wordlist) {
+    public static int createTex(List<Map<Double, List<Word>>> wordlist) {
         iniTex();
+        int exitcode = -1;
         PrintWriter bw = null;
         try {
             bw = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(new FileOutputStream(origin + ".tex"), "UTF-8")));
+                    new BufferedWriter(new OutputStreamWriter(new FileOutputStream(origin + ".tex"), "UTF-8")));
             bw.println("\\documentclass{jsarticle}");
             bw.println("\\renewcommand{\\thesection}{第\\arabic{section}回目}");
             bw.println("\n\n\\title{\\Large 間違えた単語リスト}");
@@ -237,7 +242,7 @@ class WriteTex {
                 if (wrongnum > 0)
                     bw.println("\t\\begin{itemize}");
                 for (Word word : wronglist) {
-                    int index = data.wordlist.indexOf(word);
+                    int index = word.idnum;
                     int size = word.question.length();
                     int start = 0, end = 0;
                     for (int j = 0; j < size; ++j) {
@@ -256,7 +261,7 @@ class WriteTex {
                     String question = replaceString(word.question, blank, blanktex);
                     System.out.println(word.word + " " + word.meaning + " " + word.japanese + " " + word.question);
                     System.out.println(question);
-                    bw.print("\t\t\\item[" + String.valueOf(index + 401) + "]");
+                    bw.print("\t\t\\item[" + String.valueOf(index) + "]");
                     bw.println(" {\\bf " + word.word + "} \\hspace{20pt} {\\bf " + word.meaning + "} \\\\");
                     bw.println("\t\t" + word.japanese + "\\\\");
                     bw.println("\t\t" + question + "\\\\[1cm]\n");
@@ -268,13 +273,15 @@ class WriteTex {
             bw.close();
 
             // execution tex
-            int exitcode = execCreateTex();
+            exitcode = execCreateTex();
             System.out.println(exitcode);
         } catch (IOException io) {
             io.printStackTrace();
+            exitcode = -1;
         } finally {
             if (bw != null)
                 bw.close();
         }
+        return exitcode;
     }
 }

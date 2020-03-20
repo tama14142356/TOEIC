@@ -30,11 +30,11 @@ class TestWindow extends JFrame {
 	JTextArea text;
 	JTextArea chatRoom;
 	private final static String title = "TOEIC金フレ演習";
+	private final static String israndomselect[] = { "ランダム", "番号順" };
 	private JLabel nameLabel;
 	String useranswer = "";
 	static List<String> questions = new ArrayList<String>();
 	Word curproblem;
-	static boolean isStudy = false;
 	int loop;
 	Tango data;
 	List<Map<Double, List<Word>>> wronglist = new ArrayList<Map<Double, List<Word>>>();
@@ -122,6 +122,21 @@ class TestWindow extends JFrame {
 		return useranswer;
 	}
 
+	private boolean selectRangeProblem() {
+		if (data.keylist == null)
+			return false;
+		data.clearWordlist();
+		JLabel labelmsg = new JLabel("出題範囲を選んでください");
+		int option = JOptionPane.showOptionDialog(frame, labelmsg, "出題範囲選択", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, data.keylist, data.keylist[0]);
+		if (option == data.keylist.length - 1) {
+			for (int key : data.wordlists.keySet())
+				data.setWordlist(key);
+		} else 
+			data.setWordlist(Integer.valueOf(data.keylist[option != -1 ? option : 0]));
+		return true;
+	}
+
 	private TestWindow() {
 		data = Tango.getInstance();
 		setTitle(title);
@@ -158,10 +173,21 @@ class TestWindow extends JFrame {
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				useranswer = text.getText();
-				if (useranswer.length() > 0) {
+				boolean isjudge = false;
+				if (useranswer.length() > 0)
+					isjudge = true;
+				else {
+					JLabel labelmsg = new JLabel("無回答でよろしいですか");
+					int option = JOptionPane.showConfirmDialog(frame, labelmsg, "無回答希望確認", JOptionPane.YES_NO_OPTION,
+							JOptionPane.INFORMATION_MESSAGE);
+					if (option == JOptionPane.YES_OPTION)
+						isjudge = true;
+				}
+				if (isjudge) {
 					data.judge(curproblem);
 					sendButton.setVisible(false);
 					nextButton.setVisible(true);
+					useranswer = "無回答";
 					text.setText("");
 				}
 				// System.out.println("write!!");
@@ -176,26 +202,27 @@ class TestWindow extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				text.setText("");
 				int cur = data.curpromnum;
-				if (!isStudy)
-					isStudy = true;
 				if (useranswer.length() <= 0) {
 					if (cur < loop) {
-						JLabel labelmsg = new JLabel("解答してください");
+						JLabel labelmsg = new JLabel("解答ボタンを押してください");
 						JOptionPane.showMessageDialog(frame, labelmsg);
 					} else {
 						JLabel labelmsg = new JLabel("続けますか？");
 						int option = JOptionPane.showConfirmDialog(frame, labelmsg, "継続確認", JOptionPane.YES_NO_OPTION,
 								JOptionPane.INFORMATION_MESSAGE);
 						if (option == JOptionPane.YES_OPTION) {
+							selectRangeProblem();
+							data.resetGUI();
 							// sendButton.setVisible(true);
 							nextButton.setVisible(false);
 							// buttonpanel.setVisible(false);
 							loopButton.setVisible(true);
-							data.resetGUI();
-							isStudy = false;
 						} else {
-							frame.dispose();
-							WriteTex.createTex(wronglist);
+							int exitcode = WriteTex.createTex(wronglist);
+							if (exitcode != -1)
+								frame.dispose();
+							else
+								System.exit(1);
 						}
 					}
 				} else {
@@ -235,10 +262,11 @@ class TestWindow extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				username = text.getText();
 				if (data.setName()) {
+					if(selectRangeProblem())System.out.println("sucess!");
+					data.resetGUI();
 					nameButton.setVisible(false);
 					// readButton.setVisible(true);
 					loopButton.setVisible(true);
-					data.resetGUI();
 					text.setText("");
 					useranswer = "";
 				}
@@ -254,9 +282,18 @@ class TestWindow extends JFrame {
 				if (data.setLoopcount()) {
 					loop = data.loopcount;
 					chatRoom.append(useranswer);
+					if (data.isadmin) {
+						JLabel labelmsg = new JLabel("出題形式を選んでください");
+						int option = JOptionPane.showOptionDialog(frame, labelmsg, "出題形式選択", JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, israndomselect, israndomselect[0]);
+						if (option == 0) {
+							data.israndom = true;
+						} else if (option == 1) {
+							data.israndom = false;
+						}
+					}
 					data.createProblem();
 					text.setText("");
-					isStudy = true;
 					useranswer = "";
 					loopButton.setVisible(false);
 					// buttonpanel.setVisible(true);

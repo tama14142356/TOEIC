@@ -1,3 +1,4 @@
+730
 lately
 最近、この頃
 最近テックスを見ていない。
@@ -337,7 +338,7 @@ a daily (c   ) of 30,000
 completion
 完了、終了
 プロジェクトの完了
-then (c   ) of the project
+the (c   ) of the project
 relevant
 関連した
 関連した職務経験
@@ -1078,7 +1079,7 @@ impose
 課す、負わせる、強制する
 顧客に料金を課す
 (i   ) a fee on customers
-later
+latter
 後者
 前者と後者
 the former and the (l   )
