@@ -183,86 +183,86 @@ craftspeople
 名詞：職人
 芸術家と職人
 artists and (c )
-architect
-建築家
-有名な建築家
-a famous (a   )
-grocery
-食品雑貨の、食品雑貨
-地元の食品雑貨店
-a local (g   ) store
-sculpture
-彫刻
-彫刻展
-a (s   ) exhibition
-itinerary
-旅程表
-旅程表を送る
-send an (i   )
-directory
-名簿
-社員名簿
-the company (d   )
-expire
-期限が切れる
-私の運転免許証は4月に期限が切れます。
-My driver's license (e   )s in April.
-vendor
-業者、露天商
-業者と交渉する
-negotiate with (v   )s
-colleague
-同僚
-同僚と話をする
-talk with a (c   )
-patron
-愛用者、利用者
-図書館の愛用者
-library (p   )s
-relocate
-移転させる、引っ越す
-オフィスを移転する
-(r   ) an ofice
-tourism
-観光事業
-観光産業
-(t   ) industry
-remodel
-改築する、リフォームする
-私のオフィスは改築中です。
-My office is being (r   )ed.
-consumer
-消費者
-消費者レポート
-(c   ) reports
-inspect
-検査する
-建物を検査する
-(i   ) a building
-numerous
-数多くの
-私は、数多くの地元のレストランで食事をしたことがあります。
-I have eaten at (n   ) local restaurants.
-payroll
-給与、給与管理、賃金台帳
-新しい給与管理システム
-a new (p   ) system
-qualified
-資格のある、適任の
-私はその職に適任だ。
-I am (q   ) for the position.
-appliance
-電化製品
-台所用電化製品
-kitchen (a   )s
-competitive
-他に負けない、競争の禿しい
-優れたサービスと他に負けない価格
-excellent service and (c   ) prices
-specialize
-専門とする
-その会社はウェブデザインを専門にしている。
-The company (s   )s in Web design.
+delete
+動詞：削除する
+不要なファイルを削除する
+(d ) unnecessary files
+emerging
+形容詞：新たに現われた、新興の
+新興市場
+(e ) markets
+enroll
+動詞：登録する、入会する、入学する
+エアロビクスのクラスに入る
+(e ) in an aerobics class
+proficiency
+名詞：熟練、スキルの高さ、高い能力
+英語のスキルの高さ
+(p ) in English
+scenic
+形容詞：眺めがいい、景色の
+眺めがいいルートを行く
+take the (s ) route
+state-of-the-art
+形容詞：最新式の、最先端の
+最新式の機器
+(s ) equipment
+cuisine
+名詞：料理
+フランス料理
+French (c )
+acclaimed
+形容詞：絶賛されている
+評論家に絶賛されている映画
+a critically (a ) movie
+certified
+形容詞：有資格の、公認の
+資格を持った建物の検査官
+a (c ) building inspector
+medication
+名詞：薬
+風邪の薬
+cold (m )
+overview
+名詞：概略、概況
+概要を説明する
+give an (o )
+resistant
+形容詞：耐えられる、抵抗力のある
+耐熱ガラス
+heat-(r ) glass
+superb
+形容詞：素晴らしい
+素晴らしいプレゼンを行う
+give a (s ) presentation
+array
+名詞：大量、多数
+ズラリと並んだ本
+an (a ) of books
+informative
+形容詞：有益な
+役立つセミナー
+an (i ) seminar
+nationwide
+形容詞：全国的な　副詞：全国的に
+全国配送
+(n ) delivery
+outdated
+形容詞：時代遅れの
+時代遅れのTOEIC本
+(o ) TOEIC books
+shareholder
+名詞：株主
+株式総会
+a (s )s' meeting
+voucher
+名詞：引換券
+旅行券
+a travel (v )
+adjacent
+形容詞：隣接した
+ホテルに隣接したレストラン
+the restaurant (a ) to the hotel
 questionnaire
 アンケート用紙
 アンケート用紙に記入する
