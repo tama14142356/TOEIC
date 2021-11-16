@@ -1,0 +1,1 @@
+platex tango.tex && dvipdfmx tango.dvi && del tango.aux && del tango.log && del tango.dvi && del tango.tex && move /y tango.pdf 金のフレーズ730単語間違えたリスト.pdf && del tango.bat

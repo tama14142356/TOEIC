@@ -1,7 +1,7 @@
 *.vscode
 *.JPG
-*.bat
-*.sh
+# *.bat
+# *.sh
 *.class
 *.jar
 # test*
